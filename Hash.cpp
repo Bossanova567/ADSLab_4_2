@@ -1,5 +1,6 @@
 #include "Hash.h"
-
+const int C1 = 2;
+const int C2 = 3;
 const float A = (sqrt(5) - 1)/2;
 
 struct HashNode* dummy
@@ -90,3 +91,14 @@ int HashDelete(struct HashNode** T, int k, int m, int size){
     return size;
 }
 
+int HashFunctionLinear(int k, int i, int m){
+    return (HashFunctionDivision(k ,m)+i)%m;
+}
+
+int HashFunctionQuadratic(int k, int i, int m){
+    return (HashFunctionDivision(k ,m)+C1*i+C2*i*i)%m;
+}
+
+int HashFunctionDouble(int k, int i, int m){
+    return (HashFunctionDivision(k ,m)+ i * (1+HashFunctionDivision(k, m-1)))%m;
+}
