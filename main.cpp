@@ -1,7 +1,6 @@
 #include "Hash.h"
 
 int M;
-int SIZE = 0;
 struct HashNode** T = NULL;
 
 int main(){
@@ -68,7 +67,6 @@ int main(){
                 }
                 break;
             case 3:
-                if (SIZE < M) {
                     if (T != NULL) {
                         label3:
                         int key;
@@ -80,14 +78,10 @@ int main(){
                             cout << "Do NOT type letters or words. Try again" << endl;
                             goto label3;
                         }
-                        SIZE = HashInsert(T, key, M, SIZE);
+                        HashInsert(T, key, M);
                     } else {
                         cout << "You haven't created a list." << endl;
                     }
-                }
-                else {
-                    cout << "You have inserted as much elements as you can have right now. Delete some, to insert new ones." << endl;
-                }
                 break;
             case 4:
                 if (T != NULL) {
@@ -121,7 +115,7 @@ int main(){
                         goto label5;
                     }
                     if (HashSearch(T, key, M) != -1)
-                        SIZE = HashDelete(T, key, M, SIZE);
+                        HashDelete(T, key, M);
                     else
                         cout << "The element has not been found" << endl;
                 }

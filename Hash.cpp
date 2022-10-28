@@ -2,6 +2,7 @@
 const int C1 = 2;
 const int C2 = 3;
 const float A = (sqrt(5) - 1)/2;
+const int DELETED = INT_MAX;
 
 struct HashNode* dummy
         = (struct HashNode*)malloc(sizeof(struct HashNode));
@@ -47,48 +48,45 @@ int HashFunctionMultiplication(int k, int m){
     return floor(m * modf(key*A, &intPart));
 }
 
-int HashInsert(struct HashNode** T, int k, int m, int size){
-    struct HashNode* temp
-            = (struct HashNode*)malloc(sizeof(struct HashNode));
-    temp->key = k;
-    int hashIndex = HashFunctionDivision(k, m);
-    while (T[hashIndex] != NULL && T[hashIndex]->key != k && T[hashIndex]->key != -1) {
-        hashIndex++;
-        hashIndex %= m;
+int HashInsert(struct HashNode** T, int k, int m){
+    int i = 0;
+    int j;
+    while (i != m) {
+        j = HashFunctionQuadratic(k, i, m);
+        if (T[j] == NULL || T[j]->key == DELETED) {
+            T[j]->key = k;
+            return j;
+        }
+        i++;
     }
-    if (T[hashIndex] == NULL || T[hashIndex]->key == -1)
-        size++;
-    T[hashIndex] = temp;
-    return size;
+    cout << "Error. The table is overflown";
 }
 
 int HashSearch(struct HashNode** T, int k, int m){
-    int hashIndex = HashFunctionDivision(k, m);
-    while (T[hashIndex] != NULL) {
-        int counter = 0;
-        if (counter++ > m)
-            break;
-        if (T[hashIndex]->key == k)
-            return T[hashIndex]->key;
-        hashIndex++;
-        hashIndex %= m;
+    int i = 0;
+    int j;
+    while (T[j] != NULL || i != m) {
+        j = HashFunctionQuadratic(k, i, m);
+        if (T[j]->key == k)
+            return j;
+        i++;
     }
-    return -1;
+    return NULL;
 }
 
-int HashDelete(struct HashNode** T, int k, int m, int size){
-    dummy->key = -1;
-    int hashIndex = HashFunctionDivision(k, m);
-    while (T[hashIndex] != NULL) {
-        if (T[hashIndex]->key == k) {
-            T[hashIndex] = dummy;
-            size--;
-            return size;
+int HashDelete(struct HashNode** T, int k, int m){
+    int i = 0;
+    int j;
+    while (T[j] != NULL || i != m) {
+        j = HashFunctionQuadratic(k, i, m);
+        if (T[j]->key == k) {
+            T[j]->key = DELETED;
+            return j;
         }
-        hashIndex++;
-        hashIndex %= m;
+        i++;
     }
-    return size;
+    cout << "No such element in the list." << endl;
+    return NULL;
 }
 
 int HashFunctionLinear(int k, int i, int m){
